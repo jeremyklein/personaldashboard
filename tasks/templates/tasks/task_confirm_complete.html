@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Complete Task | Personal Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
+        <div class="p-6">
+            <div class="text-center mb-6">
+                <div class="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="mt-4 text-xl font-bold text-gray-900">Complete Task</h2>
+                <p class="mt-1 text-sm text-gray-500">Are you sure you want to mark the task "{{ task.title }}" as completed?</p>
+            </div>
+            
+            <div class="mt-5 bg-gray-50 rounded-lg p-4 mb-6">
+                <h3 class="text-sm font-medium text-gray-900">Task Details</h3>
+                <div class="mt-2 text-sm text-gray-600">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <span class="font-medium">Priority:</span>
+                            <span class="ml-1 capitalize">{{ task.priority }}</span>
+                        </div>
+                        <div>
+                            <span class="font-medium">Status:</span>
+                            <span class="ml-1 capitalize">{{ task.get_status_display }}</span>
+                        </div>
+                        <div>
+                            <span class="font-medium">Bounty:</span>
+                            <span class="ml-1">{{ task.bounty }}</span>
+                        </div>
+                        {% if task.due_date %}
+                        <div>
+                            <span class="font-medium">Due Date:</span>
+                            <span class="ml-1">{{ task.due_date|date:"M d, Y" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if task.description %}
+                    <div class="mt-3">
+                        <span class="font-medium">Description:</span>
+                        <p class="mt-1">{{ task.description }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="bg-green-50 rounded-lg p-4 mb-6 border border-green-100">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-green-800">Bounty Reward</h3>
+                        <div class="mt-1 text-sm text-green-700">
+                            <p>You will earn <span class="font-semibold">{{ task.bounty }}</span> bounty points when this task is completed.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <form method="post" class="mt-6">
+                {% csrf_token %}
+                <div class="flex justify-center space-x-4">
+                    <a href="{% url 'task_list' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Cancel
+                    </a>
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Complete Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

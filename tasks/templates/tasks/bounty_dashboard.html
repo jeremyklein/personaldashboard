@@ -1,0 +1,245 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Bounty Dashboard | Personal Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Header section -->
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden mb-6">
+        <div class="p-6 sm:p-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center">
+                    <div class="h-12 w-12 bg-gradient-to-br from-emerald-600 to-green-600 rounded-xl flex items-center justify-center shadow-md mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Bounty Dashboard</h1>
+                        <p class="text-gray-500">Track your productivity and bounty earnings</p>
+                    </div>
+                </div>
+                <a href="{% url 'task_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition hover:scale-[1.02]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    View Tasks
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- Total Bounties -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+                <div class="flex items-center">
+                    <div class="h-12 w-12 bg-indigo-100 rounded-xl flex items-center justify-center shadow-sm mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Total Bounties Earned</p>
+                        <h2 class="text-3xl font-bold text-gray-900">{{ total_bounties }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Current Week Bounties -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+                <div class="flex items-center">
+                    <div class="h-12 w-12 bg-green-100 rounded-xl flex items-center justify-center shadow-sm mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">This Week's Bounties</p>
+                        <h2 class="text-3xl font-bold text-gray-900">{{ current_week_bounties }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Current Week Tasks -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+                <div class="flex items-center">
+                    <div class="h-12 w-12 bg-purple-100 rounded-xl flex items-center justify-center shadow-sm mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Tasks Completed This Week</p>
+                        <h2 class="text-3xl font-bold text-gray-900">{{ current_week_task_count }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Bounty Velocity Chart -->
+        <div class="lg:col-span-2 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="border-b border-gray-200">
+                <div class="p-6">
+                    <h2 class="text-xl font-bold text-gray-800">Bounty Velocity</h2>
+                    <p class="text-sm text-gray-500">Bounties earned per week</p>
+                </div>
+            </div>
+            <div class="p-6">
+                <div id="bounty-chart" class="h-80"></div>
+            </div>
+        </div>
+        
+        <!-- Weekly Goal -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="border-b border-gray-200">
+                <div class="p-6">
+                    <h2 class="text-xl font-bold text-gray-800">Weekly Bounty Goal</h2>
+                    <p class="text-sm text-gray-500">Set and track your weekly goal</p>
+                </div>
+            </div>
+            <div class="p-6">
+                {% if current_week_goal %}
+                <div class="mb-6">
+                    <div class="flex justify-between mb-2">
+                        <div class="text-sm font-medium text-gray-700">Progress</div>
+                        <div class="text-sm font-medium text-gray-700">{{ current_week_bounties }} / {{ current_week_goal.goal_amount }}</div>
+                    </div>
+                    <div class="bg-gray-200 rounded-full h-4 overflow-hidden">
+                        <div class="bg-green-500 h-4 rounded-full" style="width: {{ goal_progress }}%"></div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="p-4 mb-6 bg-yellow-50 rounded-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-yellow-800">No goal set</h3>
+                            <div class="mt-1 text-sm text-yellow-700">
+                                <p>You haven't set a bounty goal for this week yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label for="{{ goal_form.goal_amount.id_for_label }}" class="block text-sm font-medium text-gray-700">Weekly Goal (Bounty Points)</label>
+                        <div class="mt-1">
+                            <input type="number" name="{{ goal_form.goal_amount.name }}" id="{{ goal_form.goal_amount.id_for_label }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" value="{{ goal_form.goal_amount.value|default:'' }}" min="1" placeholder="Set your weekly goal">
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" name="{{ goal_form.week_start_date.name }}" value="{{ goal_form.week_start_date.value|date:'Y-m-d' }}">
+                    
+                    <div>
+                        <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {% if current_week_goal %}Update{% else %}Set{% endif %} Weekly Goal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add ApexCharts library -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Parse the weekly data from the Django template
+        const weeklyData = JSON.parse('{{ weekly_data|safe }}');
+        
+        // Extract data for the chart
+        const labels = weeklyData.map(week => week.week_label);
+        const bountyData = weeklyData.map(week => week.bounty);
+        const taskCountData = weeklyData.map(week => week.task_count);
+        
+        // Create the chart
+        const options = {
+            series: [{
+                name: 'Bounty Points',
+                type: 'column',
+                data: bountyData
+            }, {
+                name: 'Tasks Completed',
+                type: 'line',
+                data: taskCountData
+            }],
+            chart: {
+                height: 320,
+                type: 'line',
+                fontFamily: 'Inter, sans-serif',
+                toolbar: {
+                    show: false
+                }
+            },
+            stroke: {
+                width: [0, 3],
+                curve: 'smooth'
+            },
+            dataLabels: {
+                enabled: false
+            },
+            labels: labels,
+            colors: ['#6366F1', '#8B5CF6'],
+            grid: {
+                borderColor: '#F3F4F6',
+                row: {
+                    colors: ['#FFFFFF', '#F9FAFB']
+                }
+            },
+            markers: {
+                size: 5,
+                colors: ['#8B5CF6'],
+                strokeColors: '#FFFFFF',
+                strokeWidth: 2
+            },
+            xaxis: {
+                labels: {
+                    rotate: 0,
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 500
+                    }
+                },
+                title: {
+                    text: 'Week Starting'
+                }
+            },
+            yaxis: [{
+                title: {
+                    text: 'Bounty Points'
+                },
+                min: 0
+            }, {
+                opposite: true,
+                title: {
+                    text: 'Tasks Completed'
+                },
+                min: 0
+            }],
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right'
+            }
+        };
+        
+        const chart = new ApexCharts(document.querySelector("#bounty-chart"), options);
+        chart.render();
+    });
+</script>
+{% endblock %}
