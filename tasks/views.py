@@ -44,6 +44,7 @@ def task_create(request):
     return render(request, 'tasks/task_form.html', {
         'form': form,
         'title': 'Create Task',
+        'button_text': 'Create Task',
     })
 
 
@@ -67,6 +68,7 @@ def task_update(request, pk):
         'form': form,
         'task': task,
         'title': 'Update Task',
+        'button_text': 'Update Task',
     })
 
 
