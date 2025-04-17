@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: gunicorn dashboard.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=0
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=${POSTGRES_DB}
+      - SQL_USER=${POSTGRES_USER}
+      - SQL_PASSWORD=${POSTGRES_PASSWORD}
+      - SQL_HOST=db
+      - SQL_PORT=5432
+    restart: always
+    volumes:
+      - static_volume:/app/staticfiles
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    restart: always
+
+  # Optional nginx service for static files
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/usr/share/nginx/html/static
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+    restart: always
+
+volumes:
+  postgres_data:
+  static_volume:
