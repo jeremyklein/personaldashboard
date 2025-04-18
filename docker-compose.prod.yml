@@ -17,6 +17,7 @@ services:
     restart: always
     volumes:
       - static_volume:/app/staticfiles
+      - ./logs:/app/logs
     depends_on:
       - db
     networks:
