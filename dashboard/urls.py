@@ -17,8 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
+from core import views_debug
 
 urlpatterns = [
+    # Debug URLs for troubleshooting
+    path('debug/info/', views_debug.debug_info, name='debug_info'),
+    path('debug/csrf-form/', views_debug.test_csrf_form, name='test_csrf_form'),
+    
+    # Original URLs
     path('', include('core.urls')),
     path('tasks/', include('tasks.urls')),
     path('admin/', admin.site.urls),
