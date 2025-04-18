@@ -198,14 +198,14 @@ LOGGING = {
     },
 }
 
- CSRF_TRUSTED_ORIGINS = [
+CSRF_TRUSTED_ORIGINS = [
     'https://jkleinlabs.com',
     'https://www.jkleinlabs.com',
     'http://jkleinlabs.com',
     'http://www.jkleinlabs.com'
 ]
 
-
-
-
+# Additional CSRF security settings
 CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to access the cookie
+CSRF_USE_SESSIONS = False  # Store CSRF token in cookie, not session
