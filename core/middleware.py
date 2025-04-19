@@ -17,7 +17,11 @@ class LoginRequiredMiddleware:
                 '/admin/',
                 '/admin/login/',
                 '/__reload__/',
-                '/static/'
+                '/static/',
+                # Debug endpoints
+                '/exempt/',
+                '/set-csrf-cookie/',
+                '/debug/',
             ]
             
             # Check if current path is in the allowed paths
