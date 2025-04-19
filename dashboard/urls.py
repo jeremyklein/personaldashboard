@@ -19,10 +19,14 @@ from django.urls import path, include
 from django.views.generic.base import RedirectView
 from core import views_debug
 from core import csrf_debug
+from core import csrf_test
 
 urlpatterns = [
     # Simplified CSRF exempt debug view
     path('exempt/', csrf_debug.test_exempt, name='csrf_exempt_test'),
+    
+    # CSRF cookie setter
+    path('set-csrf-cookie/', csrf_test.set_csrf_cookie, name='set_csrf_cookie'),
     
     # Debug URLs for troubleshooting
     path('debug/info/', views_debug.debug_info, name='debug_info'),

@@ -30,7 +30,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-$!wc4z+)@@5^buh_q!4$c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get('DEBUG', '1'))
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost 127.0.0.1 [::1]').split(' ')
+# Ensure all necessary hosts are included
+ALLOWED_HOSTS = ['jkleinlabs.com', 'www.jkleinlabs.com', '157.230.54.226', 'localhost', '127.0.0.1', '[::1]']
 
 
 # Application definition
@@ -55,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',  # Temporarily disabled for testing
+    'django.middleware.csrf.CsrfViewMiddleware',  # Re-enabled
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -202,10 +203,14 @@ CSRF_TRUSTED_ORIGINS = [
     'https://jkleinlabs.com',
     'https://www.jkleinlabs.com',
     'http://jkleinlabs.com',
-    'http://www.jkleinlabs.com'
+    'http://www.jkleinlabs.com',
+    'https://157.230.54.226',
+    'http://157.230.54.226'
 ]
 
 # Additional CSRF security settings
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False  # Temporarily set to False for testing
 CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to access the cookie
+CSRF_COOKIE_DOMAIN = None  # No specific domain restriction
+CSRF_COOKIE_SAMESITE = 'Lax'  # Less restrictive SameSite policy
 CSRF_USE_SESSIONS = False  # Store CSRF token in cookie, not session
