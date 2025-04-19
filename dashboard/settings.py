@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
 TAILWIND_APP_NAME = 'theme'
 
+# Temporarily disable LoginRequiredMiddleware completely
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -62,7 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #    'django_browser_reload.middleware.BrowserReloadMiddleware',
-    'core.middleware.LoginRequiredMiddleware',
+    # 'core.middleware.LoginRequiredMiddleware',  # Completely disabled for testing
 ]
 
 ROOT_URLCONF = 'dashboard.urls'
