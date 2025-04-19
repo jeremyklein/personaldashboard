@@ -20,8 +20,14 @@ from django.views.generic.base import RedirectView
 from core import views_debug
 from core import csrf_debug
 from core import csrf_test
+import login_tests
 
 urlpatterns = [
+    # Direct import emergency debug views
+    path('exempt-direct/', login_tests.csrf_exempt_view),
+    path('set-csrf-direct/', login_tests.set_csrf),
+    path('debug-direct/', login_tests.debug_middleware),
+    
     # Simplified CSRF exempt debug view
     path('exempt/', csrf_debug.test_exempt, name='csrf_exempt_test'),
     
