@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSRF Testing Page</title>
+</head>
+<body>
+    <h1>CSRF Test Page</h1>
+    
+    <h2>CSRF Token Information:</h2>
+    <div id="csrf-info">Loading...</div>
+    
+    <h2>Test Form (exempt endpoint):</h2>
+    <form action="/exempt/" method="post" id="exemptForm">
+        <input type="text" name="username" value="test_user">
+        <button type="submit">Submit to Exempt Endpoint</button>
+    </form>
+    
+    <h2>Test Form (with CSRF token):</h2>
+    <form action="/register/" method="post" id="csrfForm">
+        <input type="hidden" name="csrfmiddlewaretoken" id="csrfToken" value="">
+        <input type="text" name="username" value="test_user">
+        <button type="submit">Submit with CSRF Token</button>
+    </form>
+    
+    <h2>CSRF Token Setter:</h2>
+    <button id="setCsrfButton">Set CSRF Cookie</button>
+    <div id="csrfResult"></div>
+    
+    <script>
+        // Function to get a cookie by name
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Update CSRF info
+        function updateCsrfInfo() {
+            const csrftoken = getCookie('csrftoken');
+            document.getElementById('csrf-info').innerHTML = `
+                <p>CSRF Token: ${csrftoken || 'Not found'}</p>
+                <p>All Cookies: ${document.cookie}</p>
+            `;
+            
+            // Update the form token
+            if (csrftoken) {
+                document.getElementById('csrfToken').value = csrftoken;
+            }
+        }
+        
+        // Call CSRF cookie setter endpoint
+        document.getElementById('setCsrfButton').addEventListener('click', function() {
+            fetch('/set-csrf-cookie/', {
+                method: 'GET',
+                credentials: 'same-origin'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('csrfResult').innerHTML = `
+                    <p>Response: ${data}</p>
+                    <p>Cookies after call: ${document.cookie}</p>
+                `;
+                updateCsrfInfo();
+            })
+            .catch(error => {
+                document.getElementById('csrfResult').innerHTML = `<p>Error: ${error}</p>`;
+            });
+        });
+        
+        // Initialize
+        window.onload = updateCsrfInfo;
+    </script>
+</body>
+</html>
