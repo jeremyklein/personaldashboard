@@ -40,6 +40,9 @@ urlpatterns = [
     # CSRF cookie setter
     path('set-csrf-cookie/', csrf_test.set_csrf_cookie, name='set_csrf_cookie'),
     
+    # Debug headers endpoint
+    path('debug/headers/', csrf_debug.debug_headers, name='debug_headers'),
+    
     # Debug URLs for troubleshooting
     path('debug/info/', views_debug.debug_info, name='debug_info'),
     path('debug/csrf-form/', views_debug.test_csrf_form, name='test_csrf_form'),

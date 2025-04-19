@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSRF Debug Tool</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .debug-section {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .debug-output {
+            background-color: #333;
+            color: #fff;
+            font-family: monospace;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .cookie-list {
+            font-family: monospace;
+        }
+        .form-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border: 1px solid #ddf;
+            border-radius: 5px;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSRF Debug Tool</h1>
+    
+    <div class="debug-section">
+        <h2>Cookie Information</h2>
+        <button id="refreshCookies">Refresh Cookie Info</button>
+        <div id="cookieOutput" class="debug-output"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Headers Sent to Server</h2>
+        <button id="checkHeaders">Check Request Headers</button>
+        <div id="headerOutput" class="debug-output"></div>
+    </div>
+    
+    <div class="form-section">
+        <h2>Test Registration Form</h2>
+        <form id="registerForm">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="password1">Password:</label>
+                <input type="password" id="password1" name="password1" required>
+            </div>
+            <div>
+                <label for="password2">Confirm Password:</label>
+                <input type="password" id="password2" name="password2" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <div id="formResult" class="debug-output" style="margin-top: 15px; display: none;"></div>
+    </div>
+
+    <script>
+        // Function to display all cookies
+        function showCookies() {
+            const cookieOutput = document.getElementById('cookieOutput');
+            const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+            
+            if (cookies.length === 0 || (cookies.length === 1 && cookies[0] === '')) {
+                cookieOutput.textContent = 'No cookies found.';
+                return;
+            }
+            
+            let cookieText = '';
+            for (const cookie of cookies) {
+                const [name, value] = cookie.split('=');
+                cookieText += `${name}=${value}\n`;
+            }
+            
+            cookieOutput.textContent = cookieText;
+        }
+        
+        // Function to check headers by making a request to an endpoint
+        async function checkHeaders() {
+            const headerOutput = document.getElementById('headerOutput');
+            headerOutput.textContent = 'Checking headers...';
+            
+            try {
+                const response = await fetch('/debug/headers/', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                headerOutput.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                headerOutput.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        // Handle register form submission
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const formResult = document.getElementById('formResult');
+            formResult.style.display = 'block';
+            formResult.textContent = 'Submitting form...';
+            
+            const formData = new FormData(event.target);
+            
+            // Get CSRF token from cookie
+            const csrfCookie = document.cookie
+                .split(';')
+                .find(cookie => cookie.trim().startsWith('csrftoken='));
+            
+            const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+            
+            try {
+                const response = await fetch('/register/', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                });
+                
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}\n\n${text}`);
+                }
+                
+                formResult.textContent = 'Form submitted successfully!';
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            } catch (error) {
+                formResult.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        // Set up event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('refreshCookies').addEventListener('click', showCookies);
+            document.getElementById('checkHeaders').addEventListener('click', checkHeaders);
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            
+            // Show cookies initially
+            showCookies();
+        });
+    </script>
+</body>
+</html>

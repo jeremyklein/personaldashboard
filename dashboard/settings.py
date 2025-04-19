@@ -216,3 +216,5 @@ CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to access the cookie
 CSRF_COOKIE_DOMAIN = None  # No specific domain restriction
 CSRF_COOKIE_SAMESITE = 'Lax'  # Less restrictive SameSite policy
 CSRF_USE_SESSIONS = False  # Store CSRF token in cookie, not session
+CSRF_COOKIE_PATH = '/'  # Ensure cookie is available for all paths
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'  # Standard header name
