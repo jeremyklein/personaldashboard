@@ -21,8 +21,14 @@ from core import views_debug
 from core import csrf_debug
 from core import csrf_test
 import login_tests
+import emergency
 
 urlpatterns = [
+    # Super emergency debug views with absolute minimal dependencies
+    path('emergency/', emergency.debug_view),
+    path('emergency/csrf/', emergency.set_csrf_cookie),
+    path('emergency/post/', emergency.test_post),
+    
     # Direct import emergency debug views
     path('exempt-direct/', login_tests.csrf_exempt_view),
     path('set-csrf-direct/', login_tests.set_csrf),
